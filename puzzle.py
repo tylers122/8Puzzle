@@ -1,15 +1,43 @@
 import time
+from queue import PriorityQueue
 
 #a tuple of tuples, since tuples are unchangeable
 #0 represents empty tile
 goalState = ((1, 2 ,3), (4, 5, 6), (7, 8, 0))
 
+#each node will be a puzzle state
+class Node:
+    def __init__(self, puzzle):
+        self.puzzle = puzzle
+        self.heuristic = 0      #h(n)
+        self.depth = 0          #g(n)
+        self.emptyX = 0         #blank space's x/column value (0-2)
+        self.emptyY = 0         #blank space's y/row value (0-2)
+
 #cleaned up main function/put everything together
 def main():
     print("Welcome to the 8 Puzzle solver!\n")
-    puzzle = getPuzzle()
-    algo = getAlgo()
 
+    puzzle = getPuzzle()
+    while True:
+        print("Choose an algorithm (1, 2, 3):")
+        print("1. Uniform Cost Search")
+        print("2. A* with Misplaced Tile Heuristic")
+        print("3. A* with Euclidean Distance Heuristic")
+        alg = int(input())
+
+        if alg == 1 or alg == 2 or alg == 3:
+            break
+
+    search(puzzle, alg)
+
+    
+
+
+def search(puzzle, alg):
+    #use priority queue for frontier
+    currPuzzle = Node(puzzle)                       #initial state
+    currPuzzle.heuristic = getAlgo(puzzle, alg)     #gets algorithm heuristic from user
 
 #gets a default puzzle or lets user create custom puzzle
 def getPuzzle():
@@ -25,20 +53,14 @@ def getPuzzle():
             return createPuzzle()
 
 #determines which algorithm to used based on user input
-def getAlgo():
+def getAlgo(puzzle, alg):
     while True:
-        print("Choose an algorithm (1, 2, 3):")
-        print("1. Uniform Cost Search")
-        print("2. A* with Misplaced Tile Heuristic")
-        print("3. A* with Euclidean Distance Heuristic")
-        alg = int(input())
-
         if alg == 1:
             return uniformCost()
         elif alg == 2:
-            return misplacedTile()
+            return misplacedTile(puzzle)
         elif alg == 3:
-            return euclidian()
+            return euclidian(puzzle)
 
 
 #premade puzzles based on user input difficulty
@@ -87,11 +109,10 @@ def uniformCost():
     #no heuristic, return 0
     return 0
 
-def misplacedTile():
+def misplacedTile(puzzle):
     pass
     
-
-def euclidian():
+def euclidian(puzzle):
     pass
 
 
