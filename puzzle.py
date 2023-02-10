@@ -38,7 +38,7 @@ def search(puzzle, alg):
     #use priority queue for frontier
     currPuzzle = Node(puzzle)                       #initial state of frontier
     currPuzzle.heuristic = getAlgo(puzzle, alg)     #gets algorithm heuristic from user
-    explored = set()                                #empty set: unordered, unchangeable, no duplicate values.   https://www.w3schools.com/python/python_sets.asp
+    explored = set()                                #initialize explored set    https://www.w3schools.com/python/python_sets.asp
     expanded = 0                                    #expanded nodes count
     max = 0                                         #max queue size
     queue = PriorityQueue()
@@ -115,6 +115,28 @@ def createPuzzle():
     printPuzzle(userPuzzle)
     return userPuzzle
 
+#convert puzzle from list to tuple
+def makeTuple(puzzle):
+    temp = ()
+    list = []
+
+    #convert each row to tuple
+    for i in range(len(puzzle)):
+        temp = tuple(puzzle[i])
+        list.append(temp)
+    list = tuple(list)
+    return list
+
+#convert puzzle from tuple to list
+def makeList(puzzle):
+    temp = []
+
+    #convert each row to list
+    for i in range(len(puzzle)):
+        temp.append(list(puzzle[i]))
+    temp = tuple(temp)
+    return temp
+
 #prints puzzle
 def printPuzzle(puzzle):
     result = ""
@@ -137,4 +159,9 @@ def euclidian(puzzle):
     pass
 
 
-main()
+# main()
+x = getPuzzle()
+x = makeTuple(x)
+print(x)
+x = makeList(x)
+print(x)
