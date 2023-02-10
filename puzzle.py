@@ -12,7 +12,31 @@ def main():
     print("3. A* with Euclidean Distance Heuristic")
     alg = input()
 
+#default puzzles based on user input difficulty
+def defaultPuzzles():
+    puzzles = (((1, 2, 3), (4, 5, 6), (7, 8, 0)),   #trivial
+               ((1, 2, 3), (4, 5, 6), (7, 0, 8)),   #very easy
+               (())) #add more later
+    
+    level = int(input("Enter a difficulty level from 1 - 9 (easy - hard): "))
+    finish = False
+    while not finish:
+        if level >= 1 and level <= 9:
+            printPuzzle(puzzles[level - 1])
+            return puzzles[level - 1]
+        level = int(input("Enter a difficulty level from 1 - 9 (easy - hard): "))
+        
+#prints puzzle
+def printPuzzle(puzzle):
+    result = ""
+    for i in range(len(puzzle)):
+        result += str(puzzle[i]) + "\n"
+    
+    print(result)
 
+    
+    
+    
 #heuristic functions
 def uniformCost():
     #no heuristic, return 0
@@ -25,4 +49,5 @@ def euclidian():
     pass
 
 
-main()
+# main()
+defaultPuzzles()
