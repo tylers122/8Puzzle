@@ -44,16 +44,24 @@ def search(puzzle, alg):
     queue = PriorityQueue()
 
     queue.put(currPuzzle)
-    explored.add(currPuzzle.puzzle)                 #TypeError: unhashable type: 'list', FIX LATER FIX LATER FIX LATER FIX LATER
+    explored.add(currPuzzle.puzzle)                 
     max += 1
 
-    while queue.qsize() != 0:
-        break
+    while queue.qsize() != 0:                       #if the frontier is empty then return failure
+        currPuzzle = queue.get()                    #choose a leaf node and remove it from the frontier
+        if currPuzzle.puzzle == goalState:          #if the node contains a goal state then return the corresponding solution
+            return currPuzzle
+        expanded += 1
+        
+        #expand node                                #expand the chosen node, adding the resulting nodes to the frontier
+
+    print("Impossible puzzle. No solution found.")  
+    exit(0)
 
 
     #psuedocode taken from project doc:
     # loop do
-    #     if the frontier is empty then return failure
+    #     if the node contains a goal state then return the corresponding solution
     #     choose a leaf node and remove it from the frontier
     #     if the node contains a goal state then return the corresponding solution
     #     add the node to the explored set
@@ -111,7 +119,7 @@ def createPuzzle():
         for j in range(len(userPuzzle)):
             userPuzzle[i][j] = int(userPuzzle[i][j])    #convert every number to int from str
 
-    userPuzzle = tuple(userPuzzle)  #convert list to tuple, now unchangeable
+    userPuzzle = makeTuple(userPuzzle)  #convert list to tuple, now unchangeable
     printPuzzle(userPuzzle)
     return userPuzzle
 
@@ -159,9 +167,4 @@ def euclidian(puzzle):
     pass
 
 
-# main()
-x = getPuzzle()
-x = makeTuple(x)
-print(x)
-x = makeList(x)
-print(x)
+main()
