@@ -25,6 +25,25 @@ def defaultPuzzles():
             printPuzzle(puzzles[level - 1])
             return puzzles[level - 1]
         level = int(input("Enter a difficulty level from 1 - 9 (easy - hard): "))
+
+def createPuzzle():
+    print("Enter a puzzle! Use 0 for a blank space.")
+    userPuzzle = []     #use list since tuples are unchangeable
+    
+    #input custom puzzle
+    for i in range(3):
+        print("Enter in row #" + str(i + 1) + ". Use a space between each number.")
+        row = input()
+        userPuzzle.append(row.split(" "))   #appends input separated by space
+
+    for i in range(len(userPuzzle)):
+        for j in range(len(userPuzzle)):
+            userPuzzle[i][j] = int(userPuzzle[i][j])    #convert every number to int from str
+
+    userPuzzle = tuple(userPuzzle)  #convert list to tuple, now unchangeable
+    printPuzzle(userPuzzle)
+    return userPuzzle        
+        
         
 #prints puzzle
 def printPuzzle(puzzle):
@@ -50,4 +69,4 @@ def euclidian():
 
 
 # main()
-defaultPuzzles()
+createPuzzle()
