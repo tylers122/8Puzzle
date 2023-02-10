@@ -12,6 +12,24 @@ def main():
     print("3. A* with Euclidean Distance Heuristic")
     alg = input()
 
+#gets a default puzzle or lets user create custom puzzle
+def getPuzzle():
+    finish = False
+    print("Select a puzzle:")
+    print("1 - Premade Puzzle")
+    print("2 - Custom Puzzle")
+    choice = int(input())
+
+    while not finish:
+        if choice == 1:
+            return defaultPuzzles()
+        elif choice == 2:
+            return createPuzzle()
+        print("Select a puzzle:")
+        print("1 - Premade Puzzle")
+        print("2 - Custom Puzzle")
+        choice = int(input())
+    
 #default puzzles based on user input difficulty
 def defaultPuzzles():
     puzzles = (((1, 2, 3), (4, 5, 6), (7, 8, 0)),   #trivial
@@ -69,4 +87,4 @@ def euclidian():
 
 
 # main()
-createPuzzle()
+getPuzzle()
