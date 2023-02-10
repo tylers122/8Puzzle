@@ -33,11 +33,32 @@ def main():
 
     
 
-
+#follows pseudocode given from project description doc https://docs.google.com/document/d/1dvHD8SyuXkMND-GpRxB21DEzvkfBVL5t/edit
 def search(puzzle, alg):
     #use priority queue for frontier
-    currPuzzle = Node(puzzle)                       #initial state
+    currPuzzle = Node(puzzle)                       #initial state of frontier
     currPuzzle.heuristic = getAlgo(puzzle, alg)     #gets algorithm heuristic from user
+    explored = set()                                #empty set: unordered, unchangeable, no duplicate values.   https://www.w3schools.com/python/python_sets.asp
+    expanded = 0                                    #expanded nodes count
+    max = 0                                         #max queue size
+    queue = PriorityQueue()
+
+    queue.put(currPuzzle)
+    explored.add(currPuzzle.puzzle)                 #TypeError: unhashable type: 'list', FIX LATER FIX LATER FIX LATER FIX LATER
+    max += 1
+
+    while queue.qsize() != 0:
+        break
+
+
+    #psuedocode taken from project doc:
+    # loop do
+    #     if the frontier is empty then return failure
+    #     choose a leaf node and remove it from the frontier
+    #     if the node contains a goal state then return the corresponding solution
+    #     add the node to the explored set
+    #     expand the chosen node, adding the resulting nodes to the frontier
+    #         only if not in the frontier or explored set
 
 #gets a default puzzle or lets user create custom puzzle
 def getPuzzle():
