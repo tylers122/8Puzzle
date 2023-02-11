@@ -15,6 +15,18 @@ class Node:
         self.blankRow = 0       #blank space's row value(0-2)
         self.blankCol = 0       #blank space's column value (0-2)
 
+    #magic method allows comparison between two objects
+    #lets priority queue work for objects
+    #https://www.geeksforgeeks.org/python-__lt__-magic-method/
+    def __lt__(self, node2):
+        self.distance = self.heuristic + self.depth
+        node2.distance = node2.heuristic + node2.depth
+
+        #force search to choose smaller depth, or else infinite loop occurs
+        if self.distance == node2.distance:
+            return node2.depth > self.depth
+        return node2.distance > self.distance
+
 #cleaned up main function/put everything together
 def main():
     print("Welcome to the 8 Puzzle solver!\n")
@@ -31,6 +43,7 @@ def main():
             break
 
     search(puzzle, alg)
+    print("Goal!")
 
     
 
@@ -54,6 +67,7 @@ def search(puzzle, alg):
             return currPuzzle
         expanded += 1
         
+        printPuzzle(currPuzzle.puzzle)
         expandNode(currPuzzle, queue, explored, alg)#expand the chosen node, adding the resulting nodes to the frontier
 
     print("Impossible puzzle. No solution found.")  
@@ -80,23 +94,21 @@ def expandNode(puzzle, queue, explored, alg):
     if puzzle.blankRow != 0:
         #move blank tile up
         move(puzzle, queue, explored, puzzle.blankRow - 1, puzzle.blankCol, alg)
-        return
-    elif puzzle.blankRow < len(puzzle.puzzle) - 10:
+    if puzzle.blankRow < len(puzzle.puzzle) - 1:
         #move blank tile down
         move(puzzle, queue, explored, puzzle.blankRow + 1, puzzle.blankCol, alg)
-        return
-    elif puzzle.blankCol != 0:
+    if puzzle.blankCol != 0:
         #move blank tile left
         move(puzzle, queue, explored, puzzle.blankRow, puzzle.blankCol - 1, alg)
-        return
-    elif puzzle.blankCol < len(puzzle.puzzle) - 1:
+    if puzzle.blankCol < len(puzzle.puzzle) - 1:
         #move blank tile right
         move(puzzle, queue, explored, puzzle.blankRow, puzzle.blankCol + 1, alg)
-        return
 
 def move(puzzle, queue, explored, row, col, alg):
-    child = copy.copy(puzzle.puzzle)            #copy tuple of tuples
-    
+    #deepcopy to create own instance of tuples within tuples 
+    #https://stackoverflow.com/questions/15214404/how-can-i-copy-an-immutable-object-like-tuple-in-python
+    child = copy.deepcopy(puzzle.puzzle)            
+
     #move blank tile accordingly
     child = makeList(child)
     child[puzzle.blankRow][puzzle.blankCol] = child[row][col]
