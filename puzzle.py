@@ -200,17 +200,34 @@ def printPuzzle(puzzle):
     print(result)
         
 
-
 #heuristic functions
 def uniformCost():
     #no heuristic, return 0
     return 0
 
 def misplacedTile(puzzle):
-    pass
-    
+    misplaced = 0
+    for i in range(len(puzzle)):
+        for j in range(len(puzzle)):
+            if puzzle[i][j] != goalState[i][j]:
+                if puzzle[i][j] != 0:
+                    misplaced += 1
+    return misplaced
+
 def euclidian(puzzle):
-    pass
+    euclidian = 0
+    goal = 0
+    misplaced = 0
+
+    for i in range(len(puzzle)):
+        for j in range(len(puzzle)):
+            if puzzle[i][j] != goalState[i][j]:
+                if puzzle[i][j] != 0:
+                    misplaced = puzzle[i][j]
+                    #FINISH LATER
+                     #FINISH LATER
+                      #FINISH LATER
+    return
 
 
 main()
