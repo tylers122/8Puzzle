@@ -1,5 +1,6 @@
 import time
 import copy
+import math
 from queue import PriorityQueue
 
 #a tuple of tuples, since tuples are unchangeable
@@ -42,8 +43,13 @@ def main():
         if alg == 1 or alg == 2 or alg == 3:
             break
 
+
+    startTime = time.time()             #start time of search
     search(puzzle, alg)
+    endTime = time.time()               #end time of search
+    searchTime = endTime - startTime    #total search time
     print("Goal!")
+    print("Search time:", str(searchTime), "s")
 
     
 
@@ -210,7 +216,13 @@ def printPuzzle(puzzle):
         result += str(puzzle[i]) + "\n"
     
     print(result)
-        
+
+#gets goal position for euclidian distance
+def getGoal(goal, misplaced):
+    for i in range(len(goal)):
+        for j in range(len(goal)):
+            if (goal[i][j] == misplaced):
+                return i, j
 
 #heuristic functions
 def uniformCost():
@@ -227,19 +239,28 @@ def misplacedTile(puzzle):
     return misplaced
 
 def euclidian(puzzle):
+    #use distance formula between position of current node and goal position:
+    #sqrt(|x2 - x1| + |y2 - y1|)
+    #sqrt(|goalX - misplacedX| + |goalY - misplacedY|)
+    #https://machinelearningmastery.com/distance-measures-for-machine-learning/#:~:text=Euclidean%20distance%20calculates%20the%20distance,floating%20point%20or%20integer%20values.
+
     euclidian = 0
-    goal = 0
+    goalRow = 0
+    goalCol = 0
     misplaced = 0
+    misRow = 0
+    misCol = 0
 
     for i in range(len(puzzle)):
         for j in range(len(puzzle)):
             if puzzle[i][j] != goalState[i][j]:
                 if puzzle[i][j] != 0:
                     misplaced = puzzle[i][j]
-                    #FINISH LATER
-                     #FINISH LATER
-                      #FINISH LATER
-    return
+                    misRow = i
+                    misCol = j
+                    goalRow, goalCol = getGoal(goalState, misplaced)
+                    euclidian += math.sqrt(abs(goalRow - misRow) + abs(goalCol - misCol))
+    return euclidian
 
 
 main()
