@@ -1,4 +1,5 @@
 import time
+import copy
 from queue import PriorityQueue
 
 #a tuple of tuples, since tuples are unchangeable
@@ -53,7 +54,7 @@ def search(puzzle, alg):
             return currPuzzle
         expanded += 1
         
-        #expand node                                #expand the chosen node, adding the resulting nodes to the frontier
+        expandNode(currPuzzle, queue, explored, alg)#expand the chosen node, adding the resulting nodes to the frontier
 
     print("Impossible puzzle. No solution found.")  
     exit(0)
@@ -76,21 +77,39 @@ def expandNode(puzzle, queue, explored, alg):
                 puzzle.blankRow = i
                 puzzle.blankCol = j
 
-    if puzzle.blankRow < len(puzzle.puzzle) - 1:
-        #move blank tile down
-        return
-    elif puzzle.blankRow != 0:
+    if puzzle.blankRow != 0:
         #move blank tile up
+        move(puzzle, queue, explored, puzzle.blankRow - 1, puzzle.blankCol, alg)
         return
-    elif puzzle.blankCol < len(puzzle.puzzle) - 1:
-        #move blank tile right
+    elif puzzle.blankRow < len(puzzle.puzzle) - 10:
+        #move blank tile down
+        move(puzzle, queue, explored, puzzle.blankRow + 1, puzzle.blankCol, alg)
         return
     elif puzzle.blankCol != 0:
         #move blank tile left
+        move(puzzle, queue, explored, puzzle.blankRow, puzzle.blankCol - 1, alg)
+        return
+    elif puzzle.blankCol < len(puzzle.puzzle) - 1:
+        #move blank tile right
+        move(puzzle, queue, explored, puzzle.blankRow, puzzle.blankCol + 1, alg)
         return
 
 def move(puzzle, queue, explored, row, col, alg):
-    pass
+    child = copy.copy(puzzle.puzzle)            #copy tuple of tuples
+    
+    #move blank tile accordingly
+    child = makeList(child)
+    child[puzzle.blankRow][puzzle.blankCol] = child[row][col]
+    child[row][col] = 0
+    child = makeTuple(child)
+
+    #new puzzle
+    if child not in explored:
+        explored.add(child)
+        childNode = Node(child)
+        childNode.heuristic = getAlgo(childNode.puzzle, alg)
+        childNode.depth = puzzle.depth + 1
+        queue.put(childNode)
 
     
 
