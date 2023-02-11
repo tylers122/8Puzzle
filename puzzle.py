@@ -11,8 +11,8 @@ class Node:
         self.puzzle = puzzle
         self.heuristic = 0      #h(n)
         self.depth = 0          #g(n)
-        self.emptyX = 0         #blank space's x/column value (0-2)
-        self.emptyY = 0         #blank space's y/row value (0-2)
+        self.blankRow = 0       #blank space's row value(0-2)
+        self.blankCol = 0       #blank space's column value (0-2)
 
 #cleaned up main function/put everything together
 def main():
@@ -61,12 +61,38 @@ def search(puzzle, alg):
 
     #psuedocode taken from project doc:
     # loop do
-    #     if the node contains a goal state then return the corresponding solution
+    #     if the frontier is empty then return failure
     #     choose a leaf node and remove it from the frontier
     #     if the node contains a goal state then return the corresponding solution
     #     add the node to the explored set
     #     expand the chosen node, adding the resulting nodes to the frontier
     #         only if not in the frontier or explored set
+
+def expandNode(puzzle, queue, explored, alg):
+    #find row and column of blank space (0)
+    for i in range(len(puzzle.puzzle)):
+        for j in range(len(puzzle.puzzle)):
+            if puzzle.puzzle[i][j] == 0:
+                puzzle.blankRow = i
+                puzzle.blankCol = j
+
+    if puzzle.blankRow < len(puzzle.puzzle) - 1:
+        #move blank tile down
+        return
+    elif puzzle.blankRow != 0:
+        #move blank tile up
+        return
+    elif puzzle.blankCol < len(puzzle.puzzle) - 1:
+        #move blank tile right
+        return
+    elif puzzle.blankCol != 0:
+        #move blank tile left
+        return
+
+def move(puzzle, queue, explored, row, col, alg):
+    pass
+
+    
 
 #gets a default puzzle or lets user create custom puzzle
 def getPuzzle():
@@ -115,9 +141,10 @@ def createPuzzle():
         row = input()
         userPuzzle.append(row.split(" "))   #appends input separated by space
 
+    #convert every number to int from str
     for i in range(len(userPuzzle)):
         for j in range(len(userPuzzle)):
-            userPuzzle[i][j] = int(userPuzzle[i][j])    #convert every number to int from str
+            userPuzzle[i][j] = int(userPuzzle[i][j])    
 
     userPuzzle = makeTuple(userPuzzle)  #convert list to tuple, now unchangeable
     printPuzzle(userPuzzle)
