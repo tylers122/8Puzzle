@@ -44,12 +44,20 @@ def main():
             break
 
 
-    startTime = time.time()             #start time of search
-    search(puzzle, alg)
-    endTime = time.time()               #end time of search
-    searchTime = endTime - startTime    #total search time
+    startTime = time.time()                                 #start time of search
+    goalState, expanded, maxNum = search(puzzle, alg)
+    endTime = time.time()                                   #end time of search
+    searchTime = endTime - startTime                        #total search time
+
+    printPuzzle(goalState.puzzle)                           #print goal state
     print("Goal!")
-    print("Search time:", str(searchTime), "s")
+    print("Solution depth:", str(goalState.depth))          #print solution depth
+    print("Expanded nodes:", str(expanded))                 #print nodes expanded
+    print("Max nodes in queue:", str(maxNum))               #print max nodes in queue
+    print("Search time:", str(round(searchTime, 4)) + "s")  #print search time
+
+
+
 
     
 
@@ -60,17 +68,18 @@ def search(puzzle, alg):
     currPuzzle.heuristic = getAlgo(puzzle, alg)     #gets algorithm heuristic from user
     explored = set()                                #initialize explored set    https://www.w3schools.com/python/python_sets.asp
     expanded = 0                                    #expanded nodes count
-    max = 0                                         #max queue size
+    maxNum = 0                                      #max queue size
     queue = PriorityQueue()
 
     queue.put(currPuzzle)
     explored.add(currPuzzle.puzzle)                 
-    max += 1
+    maxNum += 1
 
     while queue.qsize() != 0:                       #if the frontier is empty then return failure
+        maxNum = max(queue.qsize(), maxNum)         #find max queue size between priority queue and current max
         currPuzzle = queue.get()                    #choose a leaf node and remove it from the frontier
         if currPuzzle.puzzle == goalState:          #if the node contains a goal state then return the corresponding solution
-            return currPuzzle
+            return currPuzzle, expanded, maxNum
         expanded += 1
         
         printPuzzle(currPuzzle.puzzle)
@@ -159,7 +168,13 @@ def getAlgo(puzzle, alg):
 def preMadePuzzles():
     puzzles = (((1, 2, 3), (4, 5, 6), (7, 8, 0)),   #trivial
                ((1, 2, 3), (4, 5, 6), (7, 0, 8)),   #very easy
-               (())) #add more later
+               ((1, 2, 3), (4, 5, 6), (0, 7, 8)),
+               ((1, 2, 0), (4, 5, 3), (7, 8, 6)),   #easy
+               ((1, 5, 2), (4, 0, 3), (7, 8, 6)),
+               ((0, 1, 2), (4, 5, 3), (7, 8, 6)),   #doable
+               ((4, 1, 2), (7, 5, 3), (8, 6, 0)),
+               ((8, 7, 1), (6, 0, 2), (5, 4, 3)),   #oh boy
+               ((8, 7, 1), (6, 4, 2), (0, 5, 3)))
     
     while True:
         level = int(input("Enter a difficulty level from 1 - 9 (easy - hard): "))
