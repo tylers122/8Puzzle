@@ -1,9 +1,19 @@
+#Works Cited:
+#https://stackoverflow.com/questions/68630/are-tuples-more-efficient-than-lists-in-python
+#https://www.geeksforgeeks.org/python-__lt__-magic-method/
+#https://www.w3schools.com/python/python_sets.asp
+#https://docs.python.org/3/library/queue.html
+#https://stackoverflow.com/questions/15214404/how-can-i-copy-an-immutable-object-like-tuple-in-python
+#https://machinelearningmastery.com/distance-measures-for-machine-learning/#:~:text=Euclidean%20distance%20calculates%20the%20distance,floating%20point%20or%20integer%20values.
+
 import time
 import copy
 import math
 from queue import PriorityQueue
 
 #a tuple of tuples, since tuples are unchangeable
+#tuples also faster than list of lists
+#https://stackoverflow.com/questions/68630/are-tuples-more-efficient-than-lists-in-python
 #0 represents empty tile
 goalState = ((1, 2 ,3), (4, 5, 6), (7, 8, 0))
 
@@ -32,8 +42,8 @@ class Node:
 def main():
     print("Welcome to the 8 Puzzle solver!\n")
 
-    puzzle = getPuzzle()
-    while True:
+    puzzle = getPuzzle()                                    #use premade puzzle or have user create custom puzzle
+    while True:                                             #ask user to choose algorithm
         print("Choose an algorithm (1, 2, 3):")
         print("1. Uniform Cost Search")
         print("2. A* with Misplaced Tile Heuristic")
@@ -64,39 +74,30 @@ def main():
 #follows pseudocode given from project description doc https://docs.google.com/document/d/1dvHD8SyuXkMND-GpRxB21DEzvkfBVL5t/edit
 def search(puzzle, alg):
     #use priority queue for frontier
-    currPuzzle = Node(puzzle)                       #initial state of frontier
-    currPuzzle.heuristic = getAlgo(puzzle, alg)     #gets algorithm heuristic from user
-    explored = set()                                #initialize explored set    https://www.w3schools.com/python/python_sets.asp
-    expanded = 0                                    #expanded nodes count
-    maxNum = 0                                      #max queue size
-    queue = PriorityQueue()
+    currPuzzle = Node(puzzle)                           #initial state of frontier
+    currPuzzle.heuristic = getAlgo(puzzle, alg)         #gets algorithm heuristic from user
+    explored = set()                                    #initialize explored set    https://www.w3schools.com/python/python_sets.asp
+    expanded = 0                                        #expanded nodes count
+    maxNum = 0                                          #max queue size
+    queue = PriorityQueue()                             #use Python Priority Queue  https://docs.python.org/3/library/queue.html
 
-    queue.put(currPuzzle)
-    explored.add(currPuzzle.puzzle)                 
-    maxNum += 1
+    queue.put(currPuzzle)                               #add initial state to priority queue
+    explored.add(currPuzzle.puzzle)                     #explored initial state
+    maxNum += 1                                         #initial state in queue
 
-    while queue.qsize() != 0:                       #if the frontier is empty then return failure
-        maxNum = max(queue.qsize(), maxNum)         #find max queue size between priority queue and current max
-        currPuzzle = queue.get()                    #choose a leaf node and remove it from the frontier
-        if currPuzzle.puzzle == goalState:          #if the node contains a goal state then return the corresponding solution
+    while queue.qsize() != 0:                           #if the frontier is empty then return failure
+        maxNum = max(queue.qsize(), maxNum)             #find max queue size between priority queue and current max
+        currPuzzle = queue.get()                        #choose a leaf node and remove it from the frontier
+        if currPuzzle.puzzle == goalState:              #if the node contains a goal state then return the corresponding solution
             return currPuzzle, expanded, maxNum
         expanded += 1
         
         printPuzzle(currPuzzle.puzzle)
-        expandNode(currPuzzle, queue, explored, alg)#expand the chosen node, adding the resulting nodes to the frontier
+        expandNode(currPuzzle, queue, explored, alg)    #expand the chosen node, adding the resulting nodes to the frontier
 
-    print("Impossible puzzle. No solution found.")  
+    print("Impossible puzzle. No solution found.")      #if the frontier is empty then return failure
     exit(0)
 
-
-    #psuedocode taken from project doc:
-    # loop do
-    #     if the frontier is empty then return failure
-    #     choose a leaf node and remove it from the frontier
-    #     if the node contains a goal state then return the corresponding solution
-    #     add the node to the explored set
-    #     expand the chosen node, adding the resulting nodes to the frontier
-    #         only if not in the frontier or explored set
 
 def expandNode(puzzle, queue, explored, alg):
     #find row and column of blank space (0)
@@ -130,13 +131,13 @@ def move(puzzle, queue, explored, row, col, alg):
     child[row][col] = 0
     child = makeTuple(child)
 
-    #new puzzle
+    #unexplored puzzle
     if child not in explored:
-        explored.add(child)
-        childNode = Node(child)
-        childNode.heuristic = getAlgo(childNode.puzzle, alg)
-        childNode.depth = puzzle.depth + 1
-        queue.put(childNode)
+        explored.add(child)                                     #add to explored set
+        childNode = Node(child)                                 #create new node with new puzzle state
+        childNode.heuristic = getAlgo(childNode.puzzle, alg)    #calculate new heuristic for new puzzle state
+        childNode.depth = puzzle.depth + 1                      #increase depth by 1
+        queue.put(childNode)                                    #add new puzzle to priority queue
 
     
 
@@ -153,7 +154,7 @@ def getPuzzle():
         elif choice == 2:
             return createPuzzle()
 
-#determines which algorithm to used based on user input
+#determines which algorithm to use based on user input
 def getAlgo(puzzle, alg):
     while True:
         if alg == 1:
@@ -166,14 +167,14 @@ def getAlgo(puzzle, alg):
 
 #premade puzzles based on user input difficulty
 def preMadePuzzles():
-    puzzles = (((1, 2, 3), (4, 5, 6), (7, 8, 0)),   #trivial
-               ((1, 2, 3), (4, 5, 6), (7, 0, 8)),   #very easy
+    puzzles = (((1, 2, 3), (4, 5, 6), (7, 8, 0)),   #trivial    1
+               ((1, 2, 3), (4, 5, 6), (7, 0, 8)),   #very easy  2
                ((1, 2, 3), (4, 5, 6), (0, 7, 8)),
-               ((1, 2, 0), (4, 5, 3), (7, 8, 6)),   #easy
+               ((1, 2, 0), (4, 5, 3), (7, 8, 6)),   #easy       4
                ((1, 5, 2), (4, 0, 3), (7, 8, 6)),
-               ((0, 1, 2), (4, 5, 3), (7, 8, 6)),   #doable
+               ((0, 1, 2), (4, 5, 3), (7, 8, 6)),   #doable     6
                ((4, 1, 2), (7, 5, 3), (8, 6, 0)),
-               ((8, 7, 1), (6, 0, 2), (5, 4, 3)),   #oh boy
+               ((8, 7, 1), (6, 0, 2), (5, 4, 3)),   #oh boy     8
                ((8, 7, 1), (6, 4, 2), (0, 5, 3)))
     
     while True:
